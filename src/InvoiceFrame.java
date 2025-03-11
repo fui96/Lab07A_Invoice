@@ -2,6 +2,8 @@ import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class InvoiceFrame extends JFrame {
 
@@ -71,6 +73,11 @@ public class InvoiceFrame extends JFrame {
         ProductPriceField = new JLabel("Product Price");
         ProductQuantityField = new JLabel("Product Quantity");
         AddLineItemButton = new JButton("Add Line Item");
+        AddLineItemButton.addActionListener((ActionEvent ae) -> {
+            addLineItemAction();
+            ProductName.setText("");
+            ProductPrice.setText("");
+        });
         //Add to Panel
         ProductPanel.add(ProductNameField);
         ProductPanel.add(ProductName);
@@ -91,6 +98,11 @@ public class InvoiceFrame extends JFrame {
         CustomerNameField = new JLabel("Customer Name");
         CustomerAddressField = new JLabel("Customer Address");
         AddCustInfo = new JButton("Add Customer Info");
+        AddCustInfo.addActionListener((ActionEvent ae) -> {
+            addCustinfoAction();
+            CustName.setText("");
+            CustAddress.setText("");
+        });
         //Add to Panel
         CustomerPanel.add(CustomerNameField);
         CustomerPanel.add(CustName);
@@ -112,7 +124,9 @@ public class InvoiceFrame extends JFrame {
         LineItemTextArea.setEditable(false);
         LineItemTextArea.setLineWrap(true);
         ResetInvoiceButton = new JButton("Reset Invoice");
+        ResetInvoiceButton.addActionListener((ActionEvent ae) -> ResetInvoiceAction());
         CreateInvoiceButton = new JButton("Create Invoice");
+        CreateInvoiceButton.addActionListener((ActionEvent ae) -> CreateInvoiceAction());
         //Add to Panel
         InvoiceControlPanel.add(LineItemTextArea);
         ButtonPanel.add(ResetInvoiceButton);
@@ -159,10 +173,23 @@ public class InvoiceFrame extends JFrame {
     //Button actions
     public void CreateInvoiceAction(){
         StringBuilder sb  = new StringBuilder();
-        sb.append();
+        sb.append("Customer: \n" + Invoice.FullCustomer());
+        sb.append("-".repeat(40) + "\n");
+        sb.append(String.format("%10s %10s %10s %10s\n","Product","Price","Quantity","Cost"));
+        for(LineItem lineitem : Invoice.getLineItems()){
+            Product Prod = lineitem.getProduct();
+            double quantity = lineitem.getQuantity();
+            double lineCost = lineitem.getLineTotal();
+            sb.append(String.format("%10s %10s %10s %10s\n",Prod.getName(),Prod.getPrice(),quantity,lineCost));
+        }
+        sb.append("-".repeat(40) + "\n");
+        sb.append(String.format("%10s %10s","Total",Invoice.getInvoiceTotal()));
+
+        InvoiceTextArea.setText(sb.toString());
+
     }
     public void ResetInvoiceAction(){
-
+        Invoice.ClearLineItems();
     }
     public void addCustinfoAction(){
         if(ValidateCust()){
@@ -177,6 +204,7 @@ public class InvoiceFrame extends JFrame {
             Product Prod = new Product(ProductName.getText(),price);
             LineItem lineItem = new LineItem(Prod,quantity);
             Invoice.addLineItem(lineItem);
+            LineItemTextArea.append(lineItem.getProduct().getName() + ", " + lineItem.getQuantity() + "\n");
         }
     }
 

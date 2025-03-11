@@ -19,15 +19,25 @@ public class Invoice{
     public void removeLineItem(int index){
         LineItems.remove(index);
     }
-    public void getInvoiceTotal(){
+    public double getInvoiceTotal(){
         for (LineItem lineItem : LineItems){
             Total += lineItem.getLineTotal();
         }
+        return Total;
     }
     public void SetCustomer(Customer Customer){
         Customer = this.Customer;
     }
     public Customer getCustomer(){
         return Customer;
+    }
+    public String FullCustomer(){
+        return Customer.FullCustomer();
+    }
+    public ArrayList<LineItem> getLineItems(){
+        return LineItems;
+    }
+    public void ClearLineItems(){
+        LineItems.clear();
     }
 }
