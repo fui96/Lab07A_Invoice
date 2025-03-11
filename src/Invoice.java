@@ -3,11 +3,13 @@ import java.util.ArrayList;
 public class Invoice{
     //Fields
     private ArrayList<LineItem> LineItems;
-    private int Total;
+    private double Total;
+    private Customer Customer;
     //Constructor
     public Invoice(){
         LineItems = new ArrayList<>();
         Total = 0;
+        Customer = null;
     }
     //Methods
 
@@ -22,5 +24,10 @@ public class Invoice{
             Total += lineItem.getLineTotal();
         }
     }
-
+    public void SetCustomer(Customer Customer){
+        Customer = this.Customer;
+    }
+    public Customer getCustomer(){
+        return Customer;
+    }
 }
